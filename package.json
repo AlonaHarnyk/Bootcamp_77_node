@@ -1,0 +1,24 @@
+{
+  "name": "bootcamp_77_node",
+  "version": "1.0.0",
+  "description": "Intro in node",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlonaHarnyk/Bootcamp_77_node.git"
+  },
+  "keywords": [],
+  "author": "Alona",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/AlonaHarnyk/Bootcamp_77_node/issues"
+  },
+  "homepage": "https://github.com/AlonaHarnyk/Bootcamp_77_node#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
