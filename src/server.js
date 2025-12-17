@@ -3,6 +3,7 @@ import cors from "cors";
 import pino from "pino-http";
 import helmet from "helmet";
 import "dotenv/config";
+import { errors } from "celebrate";
 
 import { connectMongoDb } from "./db/connectMongoDb.js";
 import { notFoundHandler } from "./middleware/notFoundHandler.js";
@@ -26,6 +27,7 @@ app.use("/students", studentsRouter);
 
 app.use(notFoundHandler);
 
+app.use(errors());
 app.use(errorHandler);
 
 await connectMongoDb();

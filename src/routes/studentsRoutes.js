@@ -6,17 +6,28 @@ import {
   deleteStudent,
   updateStudent,
 } from "../controllers/studentsControllers.js";
+import { celebrate } from "celebrate";
+
+import {
+  createStudentBodySchema,
+  idSchema,
+  updateStudentSchema,
+} from "../validations/studentsValidation.js";
 
 const router = Router();
 
 router.get("/", getStudents);
 
-router.get("/:studentId", getStudentById);
+router.get("/:studentId", celebrate(idSchema), getStudentById);
 
-router.post("/", createStudent);
+router.post(
+  "/",
+  celebrate(createStudentBodySchema, { abortEarly: false, warnings: true }),
+  createStudent
+);
 
-router.delete("/:studentId", deleteStudent);
+router.delete("/:studentId", celebrate(idSchema), deleteStudent);
 
-router.patch("/:studentId", updateStudent);
+router.patch("/:studentId", celebrate(updateStudentSchema), updateStudent);
 
 export default router;
