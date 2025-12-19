@@ -2,8 +2,48 @@ import { Student } from "../models/student.js";
 import createHttpError from "http-errors";
 
 export const getStudents = async (req, res) => {
-  const students = await Student.find();
-  res.status(200).json(students);
+  const { page, perPage, gender, minMark, maxMark, onDuty, name } = req.query;
+
+  const skip = (page - 1) * perPage;
+
+  const studentsQuery = Student.find();
+
+  if (name) {
+    studentsQuery.where({
+      $text: {
+        $search: name,
+      },
+    });
+  }
+
+  // if (name) {
+  //   studentsQuery.where({
+  //     name: { $regex: name, $options: "i" },
+  //   });
+  // }
+
+  if (gender) {
+    studentsQuery.where("gender").equals(gender);
+  }
+
+  if (minMark) {
+    studentsQuery.where("avgMark").gte(minMark);
+  }
+
+  if (maxMark) {
+    studentsQuery.where("avgMark").lte(maxMark);
+  }
+
+  if (onDuty !== undefined) {
+    studentsQuery.where("onDuty").equals(onDuty);
+  }
+
+  const total = await studentsQuery.clone().countDocuments();
+  const students = await studentsQuery.skip(skip).limit(perPage);
+
+  const totalPages = Math.ceil(total / perPage);
+
+  res.status(200).json({ page, perPage, students, total, totalPages });
 };
 
 export const getStudentById = async (req, res, next) => {

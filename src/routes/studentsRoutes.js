@@ -12,11 +12,12 @@ import {
   createStudentBodySchema,
   idSchema,
   updateStudentSchema,
+  getStudentsSchema,
 } from "../validations/studentsValidation.js";
 
 const router = Router();
 
-router.get("/", getStudents);
+router.get("/", celebrate(getStudentsSchema), getStudents);
 
 router.get("/:studentId", celebrate(idSchema), getStudentById);
 
