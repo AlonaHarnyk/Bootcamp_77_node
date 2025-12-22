@@ -9,6 +9,7 @@ import { connectMongoDb } from "./db/connectMongoDb.js";
 import { notFoundHandler } from "./middleware/notFoundHandler.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import studentsRouter from "./routes/studentsRoutes.js";
+import authRouter from "./routes/authRouters.js";
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.use(pino());
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello in my app!" });
 });
+
+app.use("/auth", authRouter);
 
 app.use("/students", studentsRouter);
 

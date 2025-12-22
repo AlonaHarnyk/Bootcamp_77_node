@@ -5,6 +5,7 @@ const studentSchema = new Schema(
   {
     name: {
       type: String,
+      trim: true,
       required: true,
     },
     age: {
