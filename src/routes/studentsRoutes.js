@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { celebrate } from "celebrate";
 import {
   getStudents,
   getStudentById,
@@ -6,7 +7,7 @@ import {
   deleteStudent,
   updateStudent,
 } from "../controllers/studentsControllers.js";
-import { celebrate } from "celebrate";
+import { authenticate } from "../middleware/authenticate.js";
 
 import {
   createStudentBodySchema,
@@ -16,6 +17,8 @@ import {
 } from "../validations/studentsValidation.js";
 
 const router = Router();
+
+router.use(authenticate);
 
 router.get("/", celebrate(getStudentsSchema), getStudents);
 
