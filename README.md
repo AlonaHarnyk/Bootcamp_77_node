@@ -1,12 +1,6 @@
-# Заняття 8 - Аутентифікація
+# Заняття 9 - Пошта
 
-- Cесії
-  - Cookies
-  - cookie-parser
-  - accessToken
-  - refershToken
-  - sessionId
-- Оновлення сесії
-- Middleware аутентифікації
-- Зв'язок між моделями (ref)
-- Приватні дані
+- Скидання паролю
+  - POST /auth/request-reset-email
+  - POST /auth/reset-password
+  - JWT
