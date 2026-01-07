@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import { User } from "../models/user.js";
 import { createSession, setSessionCookies } from "../services/auth.js";
 import { Session } from "../models/session.js";
+import jwt from "jsonwebtoken";
+import { sendEmail } from "../utils/sendEmail.js";
 
 export const register = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -92,4 +94,67 @@ export const refreshSession = async (req, res, next) => {
   setSessionCookies(newSession, res);
 
   res.status(200).json({ message: "Session refreshed" });
+};
+
+export const reqResetEmail = async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    res.status(200).json({
+      message:
+        "If an account with such email exists, a reset link has been sent.",
+    });
+    return;
+  }
+
+  const token = jwt.sign({ id: user._id, email }, process.env.JWT_SECRET, {
+    expiresIn: "10m",
+  });
+
+  try {
+    await sendEmail({
+      from: process.env.SMTP_FROM,
+      to: email,
+      subject: "Password Reset Email",
+      html: `<p>Click <a href='${process.env.FRONTEND_DOMAIN}?token=${token}'>here</a></p>`,
+    });
+  } catch (error) {
+    console.log(error);
+    next(createHttpError(500, "Failed to send email"));
+    return;
+  }
+
+  res.status(200).json({
+    message:
+      "If an account with such email exists, a reset link has been sent.",
+  });
+};
+
+export const resetPassword = async (req, res, next) => {
+  const { token, password } = req.body;
+
+  let payload;
+  try {
+    payload = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    next(createHttpError(401, "Invalid or expired"));
+    return;
+  }
+
+  const user = await User.findOne({ email: payload.email, _id: payload.id });
+
+  if (!user) {
+    next(createHttpError(404, "User not found!"));
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await User.updateOne({ _id: user._id }, { password: hashedPassword });
+
+  // await Session.deleteMany({ userId: user._id });
+
+  res.status(200).json({ message: "Password has been updated!" });
 };
