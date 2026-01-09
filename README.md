@@ -1,6 +1,6 @@
-# Заняття 9 - Пошта
+# Заняття 10 - Зображення
 
-- Скидання паролю
-  - POST /auth/request-reset-email
-  - POST /auth/reset-password
-  - JWT
+- Тип multipart/form-data
+- multer
+- Аватар користувача
+- Cloudinary
