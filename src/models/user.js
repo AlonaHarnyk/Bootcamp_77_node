@@ -17,6 +17,10 @@ const userSchema = new Schema(
       trim: true,
       required: true,
     },
+    photo: {
+      type: String,
+      default: "http://image.com",
+    },
   },
   {
     timestamps: true,
